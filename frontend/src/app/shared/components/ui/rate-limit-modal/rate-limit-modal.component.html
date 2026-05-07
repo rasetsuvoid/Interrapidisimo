@@ -1,0 +1,16 @@
+@if (rl.isOpen()) {
+  <div class="rl-backdrop" (click)="rl.close()">
+    <div class="rl-card" (click)="$event.stopPropagation()">
+
+      <div class="rl-icon-wrap">
+        <span class="material-symbols-outlined rl-icon">timer_off</span>
+      </div>
+
+      <h2 class="rl-title">Demasiadas solicitudes</h2>
+      <p class="rl-body">{{ rl.message() }}</p>
+
+      <button class="rl-btn" (click)="rl.close()">Entendido</button>
+
+    </div>
+  </div>
+}

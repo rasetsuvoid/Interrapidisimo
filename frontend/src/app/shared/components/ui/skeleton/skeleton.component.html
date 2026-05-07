@@ -1,0 +1,5 @@
+<div class="animate-pulse space-y-3">
+  @for (i of rows; track $index) {
+    <div class="h-4 bg-base-300 rounded-lg" [style.width]="widths[$index % widths.length]"></div>
+  }
+</div>

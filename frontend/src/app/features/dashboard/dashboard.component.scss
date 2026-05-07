@@ -1,0 +1,379 @@
+:host {
+  display: block;
+}
+
+/* ── Page wrapper ─────────────────────────────────── */
+.db-page {
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 4rem 1rem;
+
+  @media (min-width: 768px) {
+    padding: 4rem 2.5rem;
+  }
+}
+
+/* ── Header ───────────────────────────────────────── */
+.db-eyebrow {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #414755;
+  margin: 0 0 4px;
+}
+
+.db-title {
+  font-size: 34px;
+  line-height: 41px;
+  letter-spacing: -0.02em;
+  font-weight: 700;
+  color: #1a1c1f;
+  margin: 0 0 32px;
+}
+
+/* ── Stats row ────────────────────────────────────── */
+.db-stats {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  margin-bottom: 64px;
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.db-stat-card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:active { transform: scale(0.98); }
+}
+
+.db-stat-label {
+  font-size: 20px;
+  line-height: 25px;
+  letter-spacing: -0.01em;
+  font-weight: 600;
+  color: #1a1c1f;
+  margin: 0 0 4px;
+}
+
+.db-stat-caption {
+  font-size: 15px;
+  color: #414755;
+  margin: 0;
+}
+
+/* Circular progress widget */
+.db-circular-outer {
+  width: 5rem;
+  height: 5rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+}
+
+.db-circular-inner {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.db-circular-text {
+  font-size: 15px;
+  font-weight: 600;
+  color: #ca6107;
+}
+
+/* Open slots badge */
+.db-slots-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.db-slots-icon {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  background: rgba(186, 26, 26, 0.12);
+  display: grid;
+  place-items: center;
+  color: #ba1a1a;
+
+  .material-symbols-outlined { font-size: 20px !important; }
+}
+
+.db-slots-number {
+  font-size: 34px;
+  line-height: 41px;
+  letter-spacing: -0.02em;
+  font-weight: 700;
+  color: #1a1c1f;
+}
+
+/* ── Section header ───────────────────────────────── */
+.db-section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.db-section-title {
+  font-size: 24px;
+  line-height: 30px;
+  letter-spacing: -0.01em;
+  font-weight: 600;
+  color: #1a1c1f;
+  margin: 0;
+}
+
+.db-section-link {
+  font-size: 15px;
+  font-weight: 600;
+  color: #ca6107;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  text-decoration: none;
+
+  &:hover { text-decoration: underline; }
+}
+
+/* ── Enrolled subjects ────────────────────────────── */
+.db-enrolled-section {
+  margin-bottom: 64px;
+}
+
+.db-subjects-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+
+  @media (min-width: 640px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.db-enrolled-card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:active { transform: scale(0.98); }
+}
+
+.db-card-header {
+  height: 6rem;
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  padding: 16px;
+
+  &.hdr-primary   { background: #e06b08; }
+  &.hdr-secondary { background: #e8930c; }
+  &.hdr-tertiary  { background: linear-gradient(135deg, #a85206, #8c4204); }
+}
+
+.db-credits-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 8px;
+  border-radius: 0.5rem;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(8px);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+
+  &.badge-primary   { color: #ca6107; }
+  &.badge-secondary { color: #e8930c; }
+  &.badge-tertiary  { color: #8c4204; }
+}
+
+.db-card-body {
+  padding: 24px;
+}
+
+.db-card-name {
+  font-size: 20px;
+  line-height: 25px;
+  letter-spacing: -0.01em;
+  font-weight: 600;
+  color: #1a1c1f;
+  margin: 0 0 16px;
+}
+
+.db-prof-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.db-prof-avatar {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background: rgba(202, 97, 7, 0.1);
+  color: #ca6107;
+  display: grid;
+  place-items: center;
+  font-size: 11px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.db-prof-name {
+  font-size: 15px;
+  color: #414755;
+  margin: 0;
+}
+
+/* Empty enrolled state */
+.db-enrolled-empty {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  padding: 3rem;
+  text-align: center;
+  color: #717786;
+  font-size: 15px;
+}
+
+/* ── Offered subjects ─────────────────────────────── */
+.db-semester-tag {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 9999px;
+  background: #e8e8ed;
+  padding: 4px 16px;
+  font-size: 15px;
+  color: #414755;
+}
+
+.db-offered-card {
+  background: #f3f3f8;
+  border-radius: 16px;
+  border: 1px solid rgba(193, 198, 215, 0.2);
+  padding: 24px;
+  transition: border-color 0.2s ease;
+
+  &:hover { border-color: rgba(202, 97, 7, 0.5); }
+}
+
+.db-offered-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 24px;
+}
+
+.db-offered-name {
+  font-size: 20px;
+  line-height: 25px;
+  letter-spacing: -0.01em;
+  font-weight: 600;
+  color: #1a1c1f;
+  margin: 0 0 2px;
+}
+
+.db-offered-sub {
+  font-size: 13px;
+  color: #414755;
+  margin: 0;
+}
+
+.db-cred-tag {
+  padding: 4px 8px;
+  border-radius: 0.5rem;
+  background: #e2e2e7;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #414755;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.db-offered-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.db-enrolled-count {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 15px;
+  color: #414755;
+
+  .material-symbols-outlined { font-size: 18px !important; color: #717786; }
+}
+
+.db-add-btn {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background: #ca6107;
+  color: #fff;
+  border: 0;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  text-decoration: none;
+
+  &:hover { transform: scale(1.1); }
+
+  .material-symbols-outlined { font-size: 20px !important; }
+}
+
+/* ── Loading skeleton ─────────────────────────────── */
+.db-shimmer {
+  background: linear-gradient(90deg,
+    rgba(193, 198, 215, 0.28),
+    rgba(216, 226, 255, 0.5),
+    rgba(193, 198, 215, 0.28));
+  background-size: 200% 100%;
+  animation: db-shimmer 1.5s infinite linear;
+  border-radius: 999px;
+}
+
+.db-skel-card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+@keyframes db-shimmer {
+  from { background-position: 200% 0; }
+  to   { background-position: -200% 0; }
+}

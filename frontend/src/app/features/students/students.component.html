@@ -1,0 +1,252 @@
+<section class="dashboard-content students-view">
+  <header class="page-header students-header">
+    <div>
+      <p class="page-eyebrow">Gestión académica</p>
+      <h1>Estudiantes</h1>
+      <p>Consulta registros, revisa carga académica y administra la información existente.</p>
+    </div>
+  </header>
+
+  <section class="stats-grid students-stats">
+    <article class="surface-card metric-card">
+      <div class="metric-head">
+        <span>En esta página</span>
+        <span class="material-symbols-outlined metric-icon">group</span>
+      </div>
+      <div class="metric-body">
+        <strong>{{ displayedStudents() }}</strong>
+      </div>
+      <p class="metric-caption">Estudiantes visibles en la página actual</p>
+    </article>
+
+    <article class="surface-card metric-card">
+      <div class="metric-head">
+        <span>Promedio de créditos</span>
+        <span class="material-symbols-outlined metric-icon">stacked_bar_chart</span>
+      </div>
+      <div class="metric-body">
+        <strong>{{ averageCredits() }}</strong>
+      </div>
+      <p class="metric-caption">Carga académica promedio de los registros visibles</p>
+    </article>
+
+    <article class="surface-card metric-card">
+      <div class="metric-head">
+        <span>Cupo completo</span>
+        <span class="material-symbols-outlined metric-icon">workspace_premium</span>
+      </div>
+      <div class="metric-body">
+        <strong>{{ fullyLoadedStudents() }}</strong>
+      </div>
+      <p class="metric-caption">Estudiantes con 9 créditos inscritos</p>
+    </article>
+  </section>
+
+  <section class="surface-card students-toolbar">
+    <label class="students-search">
+      <span class="material-symbols-outlined">search</span>
+      <input
+        type="text"
+        placeholder="Buscar por nombre, correo o código"
+        [(ngModel)]="searchTerm"
+        (input)="onSearch()"
+      />
+    </label>
+
+    <div class="students-toolbar-copy">
+      <span class="students-toolbar-label">Página</span>
+      <strong>{{ currentPage() }} / {{ totalPages() }}</strong>
+    </div>
+  </section>
+
+  @if (loading()) {
+    <section class="surface-card students-table-card">
+      <div class="students-loading-list">
+        @for (i of [1, 2, 3, 4, 5]; track i) {
+          <div class="students-loading-row">
+            <app-skeleton [lines]="2" />
+          </div>
+        }
+      </div>
+    </section>
+  } @else if (students().length === 0) {
+    <section class="surface-card students-empty">
+      <div class="students-empty-mark">
+        <span class="material-symbols-outlined">groups</span>
+      </div>
+      <h3>No se encontraron estudiantes</h3>
+      <p>Intenta ajustar la búsqueda o registra nuevos usuarios desde la pantalla de acceso.</p>
+    </section>
+  } @else {
+    <section class="surface-card students-table-card">
+      <div class="students-table-head">
+        <div>
+          <h3>Registro de estudiantes</h3>
+          <p>Vista consolidada de datos personales, materias inscritas y créditos.</p>
+        </div>
+      </div>
+
+      <div class="students-table-wrap">
+        <table class="students-table">
+          <thead>
+            <tr>
+              <th>Estudiante</th>
+              <th>Código</th>
+              <th>Correo</th>
+              <th>Materias</th>
+              <th>Créditos</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (student of students(); track student.id) {
+              <tr>
+                <td>
+                  <div class="student-identity">
+                    <div class="student-avatar">{{ initials(student) }}</div>
+                    <div>
+                      <strong>{{ student.fullName }}</strong>
+                      <span>{{ student.enrolledSubjectsCount }} materias inscritas</span>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <span class="subject-code">{{ student.studentCode }}</span>
+                </td>
+                <td>
+                  <span class="student-email">{{ student.email }}</span>
+                </td>
+                <td>
+                  <div class="student-subjects">
+                    <div class="student-dots">
+                      @for (i of subjectDots(student.enrolledSubjectsCount); track $index) {
+                        <div class="student-dot student-dot-filled"></div>
+                      }
+                      @for (i of emptyDots(student.enrolledSubjectsCount); track $index) {
+                        <div class="student-dot"></div>
+                      }
+                    </div>
+                    <span>{{ student.enrolledSubjectsCount }}/3</span>
+                  </div>
+                </td>
+                <td>
+                  <div class="student-credits">
+                    <span class="badge" [class]="creditBadge(student.totalCredits)">{{ student.totalCredits }}/9</span>
+                    <div class="student-credits-bar">
+                      <span [style.width]="progressWidth(student.totalCredits)"></span>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div class="student-actions">
+                    <a [routerLink]="['/students', student.id]" class="students-action-link">Ver</a>
+                    <button type="button" class="students-action-link" (click)="openEdit(student)">Editar</button>
+                    <button type="button" class="students-action-link students-action-link-danger" (click)="confirmDelete(student)">Eliminar</button>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      @if (totalPages() > 1) {
+        <div class="students-pagination">
+          <button type="button" class="students-page-btn" [disabled]="currentPage() <= 1" (click)="changePage(currentPage() - 1)">
+            <span class="material-symbols-outlined">chevron_left</span>
+            <span>Anterior</span>
+          </button>
+          <div class="students-page-indicator">Página {{ currentPage() }} de {{ totalPages() }}</div>
+          <button type="button" class="students-page-btn" [disabled]="currentPage() >= totalPages()" (click)="changePage(currentPage() + 1)">
+            <span>Siguiente</span>
+            <span class="material-symbols-outlined">chevron_right</span>
+          </button>
+        </div>
+      }
+    </section>
+  }
+</section>
+
+@if (showModal()) {
+  <div class="students-modal-overlay" (click)="closeModal()">
+    <div class="glass-card students-modal-box" (click)="$event.stopPropagation()">
+      <div class="students-modal-header">
+        <div>
+          <p class="page-eyebrow">Edición</p>
+          <h3>Editar estudiante</h3>
+        </div>
+      </div>
+
+      <form (ngSubmit)="saveStudent()" #form="ngForm">
+        <div class="students-form-grid">
+          <label class="students-field form-control">
+            <span class="students-field-label">Nombre *</span>
+            <input name="firstName" type="text" class="input input-bordered students-input" [(ngModel)]="formData.firstName" required maxlength="100" #firstName="ngModel" placeholder="Ej. Laura" />
+            @if (firstName.invalid && firstName.touched) {
+              <small>Ingresa el nombre.</small>
+            }
+          </label>
+
+          <label class="students-field form-control">
+            <span class="students-field-label">Apellido *</span>
+            <input name="lastName" type="text" class="input input-bordered students-input" [(ngModel)]="formData.lastName" required maxlength="100" #lastName="ngModel" placeholder="Ej. Gómez" />
+            @if (lastName.invalid && lastName.touched) {
+              <small>Ingresa el apellido.</small>
+            }
+          </label>
+
+          <label class="students-field students-field-wide form-control">
+            <span class="students-field-label">Correo electrónico *</span>
+            <input name="email" type="email" class="input input-bordered students-input" [(ngModel)]="formData.email" required email #email="ngModel" placeholder="correo@universidad.edu" />
+            @if (email.invalid && email.touched) {
+              <small>Ingresa un correo válido.</small>
+            }
+          </label>
+
+          <label class="students-field students-field-wide form-control">
+            <span class="students-field-label">Fecha de nacimiento *</span>
+            <input name="dateOfBirth" type="date" class="input input-bordered students-input" [(ngModel)]="formData.dateOfBirth" required #dateOfBirth="ngModel" />
+            @if (dateOfBirth.invalid && dateOfBirth.touched) {
+              <small>Selecciona la fecha de nacimiento.</small>
+            }
+          </label>
+
+          <label class="students-field students-field-wide form-control">
+            <span class="students-field-label">Teléfono</span>
+            <input name="phone" type="tel" class="input input-bordered students-input" [(ngModel)]="formData.phoneNumber" maxlength="20" placeholder="Ej. 3001234567" />
+          </label>
+        </div>
+
+        <div class="students-modal-actions">
+          <button type="button" class="students-secondary-btn" (click)="closeModal()">Cancelar</button>
+          <button type="submit" class="primary-action students-submit-btn" [disabled]="saving() || form.invalid">
+            @if (saving()) { <span class="loading loading-spinner loading-xs"></span> }
+            <span>Guardar cambios</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+}
+
+@if (showDeleteConfirm()) {
+  <div class="students-modal-overlay" (click)="showDeleteConfirm.set(false)">
+    <div class="glass-card students-delete-box" (click)="$event.stopPropagation()">
+      <div class="students-delete-icon">
+        <span class="material-symbols-outlined">delete</span>
+      </div>
+      <h3>Eliminar estudiante</h3>
+      <p>
+        ¿Seguro que deseas eliminar a <strong>{{ deletingStudent()?.fullName }}</strong>?
+        Esta acción no se puede deshacer.
+      </p>
+      <div class="students-modal-actions">
+        <button type="button" class="students-secondary-btn" (click)="showDeleteConfirm.set(false)">Cancelar</button>
+        <button type="button" class="students-danger-btn" (click)="deleteStudent()" [disabled]="saving()">
+          @if (saving()) { <span class="loading loading-spinner loading-xs"></span> }
+          <span>Eliminar</span>
+        </button>
+      </div>
+    </div>
+  </div>
+}

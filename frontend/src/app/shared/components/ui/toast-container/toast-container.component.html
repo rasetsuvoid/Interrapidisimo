@@ -1,0 +1,10 @@
+<div class="toast toast-top toast-end z-50">
+  @for (toast of toastService.toasts(); track toast.id) {
+    <div
+      class="alert shadow-lg animate-fade-in cursor-pointer"
+      [ngClass]="alertClass(toast)"
+      (click)="toastService.dismiss(toast.id)">
+      <span class="text-sm font-medium">{{ toast.message }}</span>
+    </div>
+  }
+</div>

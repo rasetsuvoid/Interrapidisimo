@@ -1,0 +1,9 @@
+frontend/
+tests/
+**/bin/
+**/obj/
+**/.angular/
+**/node_modules/
+.git/
+*.md
+TestResults/

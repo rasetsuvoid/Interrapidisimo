@@ -1,0 +1,180 @@
+<div class="sd-page">
+
+  <!-- Back Navigation -->
+  @if (isOwnProfile()) {
+    <a routerLink="/dashboard" class="sd-back">
+      <span class="material-symbols-outlined sd-back-arrow">arrow_back</span>
+      <span>Volver al Panel</span>
+    </a>
+  } @else {
+    <a routerLink="/students" class="sd-back">
+      <span class="material-symbols-outlined sd-back-arrow">arrow_back</span>
+      <span>Volver a estudiantes</span>
+    </a>
+  }
+
+  @if (loading()) {
+
+    <!-- Skeleton: Profile Header -->
+    <section class="sd-header">
+      <div class="sd-identity">
+        <div class="sd-skel sd-skel-avatar"></div>
+        <div class="sd-skel-identity-lines">
+          <div class="sd-skel-name-row">
+            <div class="sd-skel sd-skel-name"></div>
+            <div class="sd-skel sd-skel-badge"></div>
+          </div>
+          <div class="sd-skel sd-skel-email"></div>
+        </div>
+      </div>
+      <div class="sd-credits-card">
+        <div class="sd-skel sd-skel-label"></div>
+        <div class="sd-skel-credits-row">
+          <div class="sd-skel sd-skel-credits-value"></div>
+          <div class="sd-skel sd-skel-credits-pct"></div>
+        </div>
+        <div class="sd-skel sd-skel-progress"></div>
+        <div class="sd-skel sd-skel-footer"></div>
+      </div>
+    </section>
+
+    <!-- Skeleton: Section header -->
+    <div class="sd-section-header">
+      <div class="sd-skel sd-skel-section-title"></div>
+      <div class="sd-skel-toggles">
+        <div class="sd-skel sd-skel-toggle"></div>
+        <div class="sd-skel sd-skel-toggle"></div>
+      </div>
+    </div>
+
+    <!-- Skeleton: Bento cards -->
+    <div class="sd-bento">
+      @for (c of [0, 1, 2]; track c) {
+        <div class="sd-card">
+          <div class="sd-card-top">
+            <div class="sd-skel sd-skel-icon"></div>
+            <div class="sd-skel sd-skel-code-tag"></div>
+          </div>
+          <div class="sd-skel sd-skel-card-name"></div>
+          <div class="sd-skel sd-skel-card-prof"></div>
+          <div class="sd-card-footer">
+            <div class="sd-skel-chips">
+              <div class="sd-skel sd-skel-chip"></div>
+              <div class="sd-skel sd-skel-chip"></div>
+            </div>
+            <div class="sd-skel sd-skel-credits-mini"></div>
+          </div>
+        </div>
+      }
+    </div>
+
+  } @else if (student()) {
+
+    <!-- Profile Header -->
+    <section class="sd-header">
+
+      <!-- Identity -->
+      <div class="sd-identity">
+        <div class="sd-avatar">{{ initials() }}</div>
+        <div>
+          <div class="sd-name-row">
+            <h1 class="sd-name">{{ student()!.fullName }}</h1>
+            <span class="sd-code-badge">{{ student()!.studentCode }}</span>
+          </div>
+          <p class="sd-email">
+            <span class="material-symbols-outlined">mail</span>
+            {{ student()!.email }}
+          </p>
+        </div>
+      </div>
+
+      <!-- Credits Summary -->
+      <div class="sd-credits-card">
+        <p class="sd-credits-label">Progreso de Créditos</p>
+        <div class="sd-credits-row">
+          <span class="sd-credits-value">
+            {{ status()?.totalCredits ?? 0 }}/9
+            <span class="sd-credits-unit">créditos</span>
+          </span>
+          <span class="sd-credits-pct">{{ creditProgressPercent() }}%</span>
+        </div>
+        <div class="sd-progress-track">
+          <div class="sd-progress-fill" [style.width.%]="creditProgressPercent()"></div>
+        </div>
+        <div class="sd-credits-footer">
+          <span class="material-symbols-outlined">check_circle</span>
+          <span>{{ status()?.enrolledSubjectsCount ?? 0 }}/{{ status()?.maxSubjects ?? 3 }} materias inscritas este periodo</span>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Subjects & Classmates Section -->
+    <section>
+      <div class="sd-section-header">
+        <h2 class="sd-section-title">
+          {{ isOwnProfile() ? 'Mis materias y compañeros' : 'Materias inscritas y compañeros' }}
+        </h2>
+        <div class="sd-view-toggles">
+          <button class="sd-view-toggle">
+            <span class="material-symbols-outlined">grid_view</span>
+          </button>
+          <button class="sd-view-toggle">
+            <span class="material-symbols-outlined">view_list</span>
+          </button>
+        </div>
+      </div>
+
+      @if (enrollments().length === 0) {
+        <div class="sd-empty">
+          <span class="material-symbols-outlined">school</span>
+          <p>Aún no hay materias inscritas.</p>
+        </div>
+      } @else {
+        <div class="sd-bento">
+          @for (enrollment of enrollments(); track enrollment.subjectId; let i = $index) {
+            <div class="sd-card" [class]="subjectCardAccent(i)">
+
+              <!-- Card Top -->
+              <div class="sd-card-top">
+                <div class="sd-icon-wrap" [ngClass]="subjectIconClass(i)">
+                  <span class="material-symbols-outlined">{{ subjectIcon(i) }}</span>
+                </div>
+                <span class="sd-code-tag">{{ enrollment.subjectCode }}</span>
+              </div>
+
+              <!-- Card Body -->
+              <h3 class="sd-card-name">{{ enrollment.subjectName }}</h3>
+              <p class="sd-card-prof">Prof. {{ enrollment.professorName }}</p>
+
+              <!-- Card Footer -->
+              <div class="sd-card-footer">
+                <div class="sd-avatars">
+                  @for (classmate of visibleClassmates(enrollment.classmates); track classmate.studentId) {
+                    <div class="sd-chip" [title]="classmate.fullName">
+                      {{ classmateInitials(classmate.fullName) }}
+                    </div>
+                  }
+                  @if (extraClassmates(enrollment.classmates) > 0) {
+                    <div class="sd-chip">+{{ extraClassmates(enrollment.classmates) }}</div>
+                  }
+                  @if (enrollment.classmates.length === 0) {
+                    <span class="sd-no-classmates">Sin compañeros aún</span>
+                  }
+                </div>
+
+                <div class="sd-card-credits">
+                  <p class="sd-micro-label">CRÉDITOS</p>
+                  <p class="sd-micro-value">{{ enrollment.credits }}.0</p>
+                </div>
+              </div>
+
+            </div>
+          }
+        </div>
+      }
+    </section>
+
+  }
+
+</div>

@@ -1,0 +1,149 @@
+<div class="db-page">
+
+  <!-- Header -->
+  <header style="margin-bottom: 32px">
+    <p class="db-eyebrow">Academic Portal</p>
+    <h1 class="db-title">Dashboard</h1>
+  </header>
+
+  @if (loading()) {
+
+    <!-- Stats skeleton -->
+    <div class="db-stats">
+      @for (i of [1, 2]; track i) {
+        <div class="db-skel-card">
+          <div class="db-shimmer" style="height:1rem; width:55%"></div>
+          <div class="db-shimmer" style="height:0.75rem; width:35%"></div>
+        </div>
+      }
+    </div>
+
+    <!-- Enrolled skeleton -->
+    <div class="db-subjects-grid" style="margin-bottom:64px">
+      @for (i of [1, 2, 3]; track i) {
+        <div class="db-skel-card" style="padding:0; gap:0">
+          <div style="height:6rem; background:#e8e8ed; border-radius:16px 16px 0 0"></div>
+          <div style="padding:24px; display:flex; flex-direction:column; gap:12px">
+            <div class="db-shimmer" style="height:1rem; width:70%"></div>
+            <div class="db-shimmer" style="height:0.75rem; width:45%"></div>
+          </div>
+        </div>
+      }
+    </div>
+
+  } @else {
+
+    <!-- Stats Row -->
+    <div class="db-stats">
+
+      <!-- Credits Progress -->
+      <div class="db-stat-card">
+        <div>
+          <h3 class="db-stat-label">Mis créditos</h3>
+          <p class="db-stat-caption">Semestre actual</p>
+        </div>
+        <div class="db-circular-outer"
+             [style.background]="'conic-gradient(#ca6107 ' + creditProgressPercent() + '%, #e2e2e7 0)'">
+          <div class="db-circular-inner">
+            <span class="db-circular-text">
+              {{ enrollmentStatus()?.totalCredits ?? 0 }}/9
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Open Slots -->
+      <div class="db-stat-card">
+        <div>
+          <h3 class="db-stat-label">Cupos libres</h3>
+          <p class="db-stat-caption">Disponibilidad de inscripción</p>
+        </div>
+        <div class="db-slots-badge">
+          @if (openSlots() === 0) {
+            <div class="db-slots-icon">
+              <span class="material-symbols-outlined">lock</span>
+            </div>
+          } @else {
+            <div class="db-slots-icon" style="background:rgba(202,97,7,0.1); color:#ca6107">
+              <span class="material-symbols-outlined">lock_open</span>
+            </div>
+          }
+          <span class="db-slots-number">{{ openSlots() }}</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Mis materias inscritas -->
+    @if (enrollmentStatus(); as status) {
+      <section class="db-enrolled-section">
+        <div class="db-section-head">
+          <h2 class="db-section-title">Mis materias inscritas</h2>
+          <a [routerLink]="misMateriasRoute()" class="db-section-link">Ver detalle</a>
+        </div>
+
+        @if (status.enrolledSubjects.length === 0) {
+          <div class="db-enrolled-empty">
+            Aún no tienes materias inscritas este semestre.
+          </div>
+        } @else {
+          <div class="db-subjects-grid">
+            @for (subject of status.enrolledSubjects; track subject.id; let i = $index) {
+              <div class="db-enrolled-card">
+                <!-- Colored header -->
+                <div class="db-card-header" [class]="enrolledHeaderClass(i)">
+                  <span class="db-credits-badge" [class]="enrolledBadgeClass(i)">
+                    {{ subject.credits }} CRÉDITOS
+                  </span>
+                </div>
+                <!-- Body -->
+                <div class="db-card-body">
+                  <h4 class="db-card-name">{{ subject.name }}</h4>
+                  <div class="db-prof-row">
+                    <div class="db-prof-avatar">{{ subjectInitials(subject.professorName) }}</div>
+                    <p class="db-prof-name">{{ subject.professorName }}</p>
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+        }
+      </section>
+    }
+
+    <!-- Materias ofertadas -->
+    <section>
+      <div class="db-section-head">
+        <h2 class="db-section-title">Materias ofertadas</h2>
+        <div>
+          <span class="db-semester-tag">{{ subjects().length }} materias</span>
+        </div>
+      </div>
+
+      <div class="db-subjects-grid">
+        @for (subject of subjects(); track subject.id) {
+          <div class="db-offered-card">
+            <div class="db-offered-top">
+              <div>
+                <h4 class="db-offered-name">{{ subject.name }}</h4>
+                <p class="db-offered-sub">{{ subject.professorName }}</p>
+              </div>
+              <span class="db-cred-tag">{{ subject.credits }} CRED</span>
+            </div>
+            <div class="db-offered-bottom">
+              <div class="db-enrolled-count">
+                <span class="material-symbols-outlined">group</span>
+                <span>{{ subject.enrolledStudentsCount }} inscritos</span>
+              </div>
+              <a routerLink="/subjects" class="db-add-btn" title="Ir a inscribir">
+                <span class="material-symbols-outlined">add</span>
+              </a>
+            </div>
+          </div>
+        }
+      </div>
+    </section>
+
+  }
+
+</div>

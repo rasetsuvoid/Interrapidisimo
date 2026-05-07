@@ -1,0 +1,214 @@
+<section class="auth-shell">
+  <main class="auth-main">
+    <header class="auth-hero">
+      <img src="images/logo-inter-png1-1024x216.png" alt="Interrapidisimo" class="auth-logo-img" />
+      <p>Portal Académico</p>
+    </header>
+
+    <section class="auth-card">
+      <div class="auth-tabs">
+        <button type="button" class="auth-tab" [class.auth-tab-active]="mode() === 'login'" (click)="setMode('login')">
+          Iniciar sesión
+        </button>
+        <button type="button" class="auth-tab" [class.auth-tab-active]="mode() === 'register'" (click)="setMode('register')">
+          Registro
+        </button>
+      </div>
+
+      @if (mode() === 'login') {
+        <form class="auth-form" (ngSubmit)="submitLogin()" #loginForm="ngForm">
+          <label class="auth-field auth-field-wide">
+            <span class="auth-label">Correo electrónico</span>
+            <div class="auth-input-shell">
+              <span class="material-symbols-outlined auth-leading-icon">mail</span>
+              <input
+                name="loginEmail"
+                type="email"
+                class="input input-bordered auth-input"
+                [(ngModel)]="loginData.email"
+                required
+                email
+                placeholder="estudiante@universidad.edu" />
+            </div>
+          </label>
+
+          <div class="auth-password-head">
+            <span class="auth-label">Contraseña</span>
+            <button type="button" class="auth-link-btn">¿Olvidaste tu contraseña?</button>
+          </div>
+
+          <label class="auth-field">
+            <div class="auth-input-shell">
+              <span class="material-symbols-outlined auth-leading-icon">lock</span>
+              <input
+                name="loginPassword"
+                [type]="showLoginPassword() ? 'text' : 'password'"
+                class="input input-bordered auth-input auth-input-password"
+                [(ngModel)]="loginData.password"
+                required
+                placeholder="••••••••" />
+              <button type="button" class="auth-icon-btn" (click)="toggleLoginPasswordVisibility()">
+                <span class="material-symbols-outlined">{{ showLoginPassword() ? 'visibility_off' : 'visibility' }}</span>
+              </button>
+            </div>
+          </label>
+
+          <label class="auth-checkbox">
+            <input type="checkbox" class="checkbox auth-checkbox-input" [(ngModel)]="rememberSession" name="rememberSession" />
+            <span>Recordar sesión en este dispositivo</span>
+          </label>
+
+          @if (serverError()) {
+            <div class="auth-server-error">
+              <span class="material-symbols-outlined">error</span>
+              <span>{{ serverError() }}</span>
+            </div>
+          }
+
+          <button type="submit" class="primary-action auth-submit" [disabled]="submitting() || loginForm.invalid">
+            @if (submitting()) { <span class="loading loading-spinner loading-xs"></span> }
+            <span>Acceder al Portal</span>
+            <span class="material-symbols-outlined">arrow_forward</span>
+          </button>
+        </form>
+      } @else {
+        <form class="auth-form auth-form-register" (ngSubmit)="submitRegister()" #registerForm="ngForm">
+          <label class="auth-field">
+            <span class="auth-label">Nombre</span>
+            <div class="auth-input-shell">
+              <span class="material-symbols-outlined auth-leading-icon">person</span>
+              <input
+                name="firstName"
+                type="text"
+                class="input input-bordered auth-input"
+                [(ngModel)]="registerData.firstName"
+                required
+                placeholder="Ej. Laura" />
+            </div>
+          </label>
+
+          <label class="auth-field">
+            <span class="auth-label">Apellido</span>
+            <div class="auth-input-shell">
+              <span class="material-symbols-outlined auth-leading-icon">badge</span>
+              <input
+                name="lastName"
+                type="text"
+                class="input input-bordered auth-input"
+                [(ngModel)]="registerData.lastName"
+                required
+                placeholder="Ej. Gómez" />
+            </div>
+          </label>
+
+          <label class="auth-field auth-field-wide">
+            <span class="auth-label">Correo electrónico</span>
+            <div class="auth-input-shell">
+              <span class="material-symbols-outlined auth-leading-icon">mail</span>
+              <input
+                name="email"
+                type="email"
+                class="input input-bordered auth-input"
+                [(ngModel)]="registerData.email"
+                required
+                email
+                placeholder="correo@universidad.edu" />
+            </div>
+          </label>
+
+          <label class="auth-field">
+            <span class="auth-label">Código del estudiante</span>
+            <div class="auth-input-shell">
+              <span class="material-symbols-outlined auth-leading-icon">badge</span>
+              <input
+                name="studentCode"
+                type="text"
+                class="input input-bordered auth-input"
+                [(ngModel)]="registerData.studentCode"
+                required
+                placeholder="Ej. STU-1042" />
+            </div>
+          </label>
+
+          <label class="auth-field auth-field-date">
+            <span class="auth-label">Fecha de nacimiento</span>
+            <div class="auth-input-shell">
+              <span class="material-symbols-outlined auth-leading-icon">calendar_today</span>
+              <input
+                #dateOfBirthInput
+                name="dateOfBirth"
+                type="date"
+                class="input input-bordered auth-input"
+                [(ngModel)]="registerData.dateOfBirth"
+                required />
+              <button type="button" class="auth-date-btn" (click)="openDatePicker(dateOfBirthInput)">
+                <span class="material-symbols-outlined">calendar_month</span>
+              </button>
+            </div>
+          </label>
+
+          <label class="auth-field auth-field-wide">
+            <span class="auth-label">Teléfono</span>
+            <div class="auth-input-shell">
+              <span class="material-symbols-outlined auth-leading-icon">call</span>
+              <input
+                name="phoneNumber"
+                type="tel"
+                class="input input-bordered auth-input"
+                [(ngModel)]="registerData.phoneNumber"
+                placeholder="Ej. 3001234567" />
+            </div>
+          </label>
+
+          <label class="auth-field auth-field-wide">
+            <span class="auth-label">Contraseña</span>
+            <div class="auth-input-shell">
+              <span class="material-symbols-outlined auth-leading-icon">lock</span>
+              <input
+                name="password"
+                [type]="showRegisterPassword() ? 'text' : 'password'"
+                class="input input-bordered auth-input auth-input-password"
+                [(ngModel)]="registerData.password"
+                required
+                placeholder="Mínimo 8 caracteres, una mayúscula y un número" />
+              <button type="button" class="auth-icon-btn" (click)="toggleRegisterPasswordVisibility()">
+                <span class="material-symbols-outlined">{{ showRegisterPassword() ? 'visibility_off' : 'visibility' }}</span>
+              </button>
+            </div>
+          </label>
+
+          @if (serverError()) {
+            <div class="auth-server-error auth-field-wide">
+              <span class="material-symbols-outlined">error</span>
+              <span>{{ serverError() }}</span>
+            </div>
+          }
+
+          <button
+            type="submit"
+            class="primary-action auth-submit auth-submit-wide"
+            [disabled]="submitting() || registerForm.invalid">
+            @if (submitting()) { <span class="loading loading-spinner loading-xs"></span> }
+            <span>Crear cuenta</span>
+            <span class="material-symbols-outlined">arrow_forward</span>
+          </button>
+        </form>
+      }
+    </section>
+
+    <footer class="auth-footer">
+      <p>© 2026 Diego Rincon</p>
+      <div class="auth-footer-links">
+        <button type="button">Términos de Servicio</button>
+        <button type="button">Privacidad</button>
+        <button type="button">Soporte</button>
+      </div>
+    </footer>
+  </main>
+
+  <div class="auth-background" aria-hidden="true">
+    <div class="auth-glow auth-glow-primary"></div>
+    <div class="auth-glow auth-glow-tertiary"></div>
+    <div class="auth-grid-overlay"></div>
+  </div>
+</section>

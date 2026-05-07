@@ -1,0 +1,112 @@
+<div class="sj-page">
+
+  <!-- Stats -->
+  <section class="sj-stats">
+    <div class="sj-stat-card">
+      <p class="sj-stat-label">Total de Materias</p>
+      <span class="sj-stat-value val-primary">{{ subjects().length }}</span>
+    </div>
+    <div class="sj-stat-card">
+      <p class="sj-stat-label">Cupos Disponibles</p>
+      <span class="sj-stat-value val-muted">{{ remainingSlots() }}</span>
+    </div>
+    <div class="sj-stat-card">
+      <p class="sj-stat-label">Inscripciones</p>
+      <span class="sj-stat-value val-secondary">
+        {{ enrollmentStatus()?.enrolledSubjectsCount ?? 0 }}
+      </span>
+    </div>
+  </section>
+
+  <!-- Header -->
+  <header class="sj-header">
+    <h1 class="sj-title">Catálogo de materias</h1>
+    <p class="sj-subtitle">
+      Explora y gestiona tu carga académica para el presente ciclo.
+      Selecciona tus asignaturas prioritarias y revisa la disponibilidad de créditos.
+    </p>
+  </header>
+
+  @if (loading()) {
+    <div class="sj-grid">
+      @for (i of [1, 2, 3, 4, 5, 6]; track i) {
+        <div class="sj-skel-card">
+          <div class="sj-shimmer" style="height:1.1rem; width:40%"></div>
+          <div class="sj-shimmer" style="height:0.85rem; width:70%"></div>
+          <div style="display:flex; align-items:center; gap:12px; margin-top:4px">
+            <div class="sj-shimmer" style="width:2.5rem; height:2.5rem; border-radius:50%; flex-shrink:0"></div>
+            <div class="sj-shimmer" style="height:0.75rem; width:55%"></div>
+          </div>
+          <div class="sj-shimmer" style="height:0.75rem; width:45%; margin-top:8px"></div>
+        </div>
+      }
+    </div>
+  } @else {
+    <div class="sj-grid">
+      @for (subject of subjects(); track subject.id; let i = $index) {
+        @let state = subjectState(subject.id);
+        <article class="sj-card">
+
+          <!-- Top: code + name / credits -->
+          <div class="sj-card-top">
+            <div>
+              <span class="sj-code-pill">{{ subject.code }}</span>
+              <h2 class="sj-card-name">{{ subject.name }}</h2>
+            </div>
+            <p class="sj-credits-label">{{ subject.credits }} créditos</p>
+          </div>
+
+          <!-- Professor -->
+          <div class="sj-prof-row">
+            <div class="sj-prof-avatar" [ngClass]="avatarClass(i)">
+              {{ professorInitials(subject.professorName) }}
+            </div>
+            <p class="sj-prof-name">{{ subject.professorName }}</p>
+          </div>
+
+          <!-- Footer: state-based action -->
+          <div class="sj-card-footer">
+            @if (state === 'enrolled') {
+              <div class="sj-state-enrolled">
+                <span class="material-symbols-outlined">check_circle</span>
+                <span>Inscrito</span>
+              </div>
+              <button class="sj-btn-withdraw"
+                      (click)="withdraw(subject)"
+                      [disabled]="withdrawingId() === subject.id">
+                @if (withdrawingId() === subject.id) { Retirando… } @else { Retirar }
+              </button>
+
+            } @else if (state === 'available') {
+              <div class="sj-state-available">
+                <span class="sj-avail-count">{{ subject.enrolledStudentsCount }} inscritos</span>
+                <span class="sj-avail-sub">Disponible</span>
+              </div>
+              <button class="sj-btn-enroll"
+                      (click)="enroll(subject)"
+                      [disabled]="enrollingId() === subject.id">
+                @if (enrollingId() === subject.id) { Inscribiendo… } @else { Inscribir }
+              </button>
+
+            } @else if (state === 'full') {
+              <span class="sj-state-unavailable">Sin cupos disponibles</span>
+              <button class="sj-btn-disabled" disabled>Créditos completos</button>
+
+            } @else if (state === 'conflict') {
+              <span class="sj-badge-conflict">Mismo profesor</span>
+
+            } @else {
+              <!-- guest: no action, just enrolled count -->
+              <div class="sj-state-guest">
+                <span class="material-symbols-outlined">group</span>
+                <span>{{ subject.enrolledStudentsCount }} inscritos</span>
+              </div>
+            }
+          </div>
+
+        </article>
+      }
+    </div>
+  }
+
+</div>
