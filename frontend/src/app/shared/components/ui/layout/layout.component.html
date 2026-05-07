@@ -1,5 +1,18 @@
 <div class="dashboard-shell">
-  <app-sidebar />
+  <div
+    class="sidebar-overlay"
+    [class.sidebar-open]="sidebarOpen()"
+    (click)="closeSidebar()"
+    (keydown.escape)="closeSidebar()"
+    aria-hidden="true">
+  </div>
+
+  <button class="mobile-menu-btn" (click)="openSidebar()" aria-label="Abrir menú">
+    <span class="material-symbols-outlined">menu</span>
+  </button>
+
+  <app-sidebar [isOpen]="sidebarOpen()" (closeRequest)="closeSidebar()" />
+
   <main class="dashboard-main">
     <router-outlet />
   </main>

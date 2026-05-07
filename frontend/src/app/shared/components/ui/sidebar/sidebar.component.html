@@ -1,12 +1,10 @@
-<aside class="dashboard-sidebar">
+<aside class="dashboard-sidebar" [class.sidebar-open]="isOpen()">
+  <button class="sidebar-close-btn" (click)="close()" aria-label="Cerrar menú">
+    <span class="material-symbols-outlined">close</span>
+  </button>
+
   <div class="brand-block">
-    <div class="brand-mark">
-      <span class="material-symbols-outlined filled">school</span>
-    </div>
-    <div>
-      <h2>Interrapidisimo</h2>
-      <p>Portal académico</p>
-    </div>
+    <img src="images/logo-inter-png1-1024x216.png" alt="Interrapidisimo" class="sidebar-logo" />
   </div>
 
   <nav class="sidebar-nav">
@@ -14,7 +12,8 @@
       [routerLink]="'/dashboard'"
       routerLinkActive="nav-link-active"
       [routerLinkActiveOptions]="{ exact: true }"
-      class="nav-link">
+      class="nav-link"
+      (click)="close()">
       <span class="material-symbols-outlined filled">dashboard</span>
       <span>Panel</span>
     </a>
@@ -22,7 +21,8 @@
     <a
       [routerLink]="misMateriasRoute()"
       routerLinkActive="nav-link-active"
-      class="nav-link">
+      class="nav-link"
+      (click)="close()">
       <span class="material-symbols-outlined">assignment</span>
       <span>Mis Materias</span>
     </a>
@@ -30,7 +30,8 @@
     <a
       [routerLink]="'/subjects'"
       routerLinkActive="nav-link-active"
-      class="nav-link">
+      class="nav-link"
+      (click)="close()">
       <span class="material-symbols-outlined">menu_book</span>
       <span>Materias</span>
     </a>

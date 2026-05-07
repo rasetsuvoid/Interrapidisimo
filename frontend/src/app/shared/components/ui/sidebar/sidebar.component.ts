@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, inject, input, output } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../../../core/services/auth.service';
 import { AuthSessionService } from '../../../../core/services/auth-session.service';
@@ -12,11 +12,15 @@ import { AuthSessionService } from '../../../../core/services/auth-session.servi
 export class SidebarComponent {
   protected readonly session = inject(AuthSessionService);
   protected readonly auth = inject(AuthService);
+  readonly isOpen = input(false);
+  readonly closeRequest = output<void>();
 
   protected readonly misMateriasRoute = computed(() => {
     const student = this.session.currentStudent();
     return student ? `/students/${student.id}` : '/dashboard';
   });
+
+  close(): void { this.closeRequest.emit(); }
 
   logout(): void {
     this.auth.logout();
